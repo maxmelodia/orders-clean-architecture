@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Item_1 = __importDefault(require("../src/Item"));
+const Item_1 = __importDefault(require("../../src/domain/entity/Item"));
 test("Deve criar um item", function () {
     const item = new Item_1.default(1, "Peliféricos", "M2 Samsung 1TB", 1000);
     expect(item.idItem).toBe(1);
