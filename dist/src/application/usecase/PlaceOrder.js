@@ -13,22 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Order_1 = __importDefault(require("../../domain/entity/Order"));
+const PlaceOrderOutputAssembler_1 = __importDefault(require("../dto/PlaceOrderOutputAssembler"));
 class PlaceOrder {
-    constructor(itemRepository, orderRepository) {
+    constructor(itemRepository, orderRepository, couponRepository) {
         this.itemRepository = itemRepository;
         this.orderRepository = orderRepository;
+        this.couponRepository = couponRepository;
     }
     execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = new Order_1.default(input.cpf);
+            const order = new Order_1.default(input.cpf, input.issueDate, 1);
             for (const orderItem of input.orderItems) {
                 const item = yield this.itemRepository.findById(orderItem.idItem);
                 order.addItem(item, orderItem.quantity);
             }
+            if (input.coupon) {
+                const coupon = yield this.couponRepository.findByCode(input.coupon);
+                order.addCoupon(coupon);
+            }
             this.orderRepository.save(order);
-            return {
-                total: order.getTotal()
-            };
+            return PlaceOrderOutputAssembler_1.default.assembly(order);
         });
     }
 }

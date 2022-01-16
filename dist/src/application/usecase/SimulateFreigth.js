@@ -9,14 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+class SimulateFreight {
+    constructor(itemRepository) {
+        this.itemRepository = itemRepository;
     }
-    save(order) {
+    execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
+            let freight = 0;
+            for (const itemInput of input.items) {
+                const item = yield this.itemRepository.findById(itemInput.idItem);
+                freight += item.getFreight() * itemInput.quantity;
+            }
+            return freight;
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = SimulateFreight;

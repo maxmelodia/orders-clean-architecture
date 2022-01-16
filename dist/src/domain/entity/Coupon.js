@@ -11,5 +11,8 @@ class Coupon {
             return false;
         return this.expireDate.getTime() < today.getTime();
     }
+    isValid(today = new Date()) {
+        return !this.isExpired(today);
+    }
 }
 exports.default = Coupon;

@@ -48,3 +48,12 @@ test("Deve criar um pedido com 3 itens", function(){
     const freight = order.getFreight();
     expect(freight).toBe(260);   
 });
+
+test("Deve criar um pedido com o código gerado", function(){ 
+    const order = new Order("687.054.760-20", new Date("2021-03-01"));
+    order.addItem(new Item(1, "Peliféricos", "M2 Samsung 1TB", 1000),1);
+    order.addItem(new Item(2, "Peliféricos", "Monitor Gamer LG 1234", 5000),1);
+    order.addItem(new Item(3, "Peliféricos", "Teclado Multilaser", 30),3);
+    const code = order.code;
+    expect(code.value).toBe("202100000001");   
+});

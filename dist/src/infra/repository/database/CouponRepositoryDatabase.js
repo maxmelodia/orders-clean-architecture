@@ -8,15 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
+class CouponRepositoryDatabase {
+    constructor(databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
-    save(order) {
+    findByCode(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
+            const [couponData] = yield this.databaseConnection.query("select * from ccca.coupon where code = $1", [code]);
+            if (!couponData)
+                throw new Error("Coupon not found");
+            const coupon = new Coupon_1.default(couponData.code, couponData.percentage, couponData.expireDate);
+            return coupon;
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = CouponRepositoryDatabase;

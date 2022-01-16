@@ -12,17 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Item_1 = __importDefault(require("../../../domain/entity/Item"));
-class ItemsRepositoryDatabase {
-    constructor(databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
-    findById(idItem) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const [itemsData] = yield this.databaseConnection.query("select * from ccca.item where id = $1", [idItem]);
-            const item = new Item_1.default(itemsData.id, itemsData.category, itemsData.description, parseFloat(itemsData.price), itemsData.width, itemsData.height, itemsData.length, itemsData.weight);
-            return item;
-        });
-    }
-}
-exports.default = ItemsRepositoryDatabase;
+const ValidateCoupon_1 = __importDefault(require("../../src/application/usecase/ValidateCoupon"));
+const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
+const CouponRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/CouponRepositoryDatabase"));
+test("Deve validar o cupom de desconto", function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const databaseConnection = new DatabaseConnectionAdapter_1.default();
+        const couponRepository = new CouponRepositoryDatabase_1.default(databaseConnection);
+        const validateCoupon = new ValidateCoupon_1.default(couponRepository);
+        const isValid = yield validateCoupon.execute("VALE20", new Date("2021-10-01"));
+        expect(isValid).toBeTruthy();
+    });
+});
