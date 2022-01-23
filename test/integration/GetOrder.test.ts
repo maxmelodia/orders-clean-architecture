@@ -1,11 +1,14 @@
-import PlaceOrder from "../../src/application/usecase/PlaceOrder";
 import PlaceOrderInput from "../../src/application/dto/PlaceOrderInput";
-import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
+import GetOrder from "../../src/application/query/GetOrder";
+import PlaceOrder from "../../src/application/usecase/PlaceOrder";
+import OrderDAODatabase from "../../src/infra/dao/OrderDAODatabase";
 import DatabaseConnectionAdapter from "../../src/infra/database/DatabaseConnectionAdapter";
-import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
 import CouponRepositoryDatabase from "../../src/infra/repository/database/CouponRepositoryDatabase";
+import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
+import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
 
 let placeOrder: PlaceOrder;
+let getOrder: GetOrder;
 
 beforeEach(function() {
     const datadaseConnection = new DatabaseConnectionAdapter();
@@ -13,9 +16,11 @@ beforeEach(function() {
     const orderRepository = new OrderRepositoryDatabase(datadaseConnection);
     const couponRepository = new CouponRepositoryDatabase(datadaseConnection);
     placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+    const orderDAO = new OrderDAODatabase(datadaseConnection);
+    getOrder = new GetOrder(orderDAO);
 });
 
-test("Deve fazer um pedido", async function() {
+test("Deve obter um pedido pelo código", async function (){
     const input =  new PlaceOrderInput(
         "687.054.760-20", 
         [
@@ -35,6 +40,8 @@ test("Deve fazer um pedido", async function() {
         "VALE20"
     );
     
-    const output = await placeOrder.execute(input);
-    expect(output.total).toBe(4872);    
+    const placeOrderOutput = await placeOrder.execute(input);
+    const getOrderOutput = await getOrder.execute(placeOrderOutput.code);
+    console.log(getOrderOutput);
+    expect(getOrderOutput.total).toBe(4872);
 });

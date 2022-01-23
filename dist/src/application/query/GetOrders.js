@@ -8,20 +8,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+const GetOrderOutput_1 = __importDefault(require("../dto/GetOrderOutput"));
+class GetOrders {
+    constructor(orderDAO) {
+        this.orderDAO = orderDAO;
     }
-    save(order) {
+    execute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
-        });
-    }
-    count() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.orders.length;
+            const ordersData = yield this.orderDAO.getOrders();
+            const getOrdersOutput = [];
+            for (const orderData of ordersData) {
+                const orderItemsData = yield this.orderDAO.getOrderItems(orderData.id);
+                const getOrderOutput = new GetOrderOutput_1.default(orderData.code, orderData.cpf, orderItemsData, orderData.freight, orderData.total);
+                getOrdersOutput.push(getOrderOutput);
+            }
+            return getOrdersOutput;
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = GetOrders;

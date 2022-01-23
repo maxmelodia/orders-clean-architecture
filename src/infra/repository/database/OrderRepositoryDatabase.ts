@@ -11,11 +11,11 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         const [orderData] =  await this.databaseConnection.query(`
            insert into ccca.order
            (
-               code, cpf, issue_date, freight, sequence, coupon
+               code, cpf, issue_date, freight, sequence, coupon, total
            )
            values
            (
-               $1,$2,$3,$4,$5,$6
+               $1,$2,$3,$4,$5,$6,$7
            )
            returning *`,            
            [
@@ -24,7 +24,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                order.issueDate,
                order.getFreight(), 
                order.sequence,
-               order.getCoupon()
+               order.getCoupon(), 
+               order.getTotal()
            ]
         );
 
@@ -45,5 +46,10 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 				]
 			)
 		}        
+    }
+
+    async count() {
+        const [data] = await this.databaseConnection.query("select count(*)::int from ccca.order", []);
+        return data.count;       
     }
 }

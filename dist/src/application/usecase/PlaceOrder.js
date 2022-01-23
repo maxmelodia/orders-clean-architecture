@@ -22,7 +22,8 @@ class PlaceOrder {
     }
     execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = new Order_1.default(input.cpf, input.issueDate, 1);
+            let sequence = yield this.orderRepository.count();
+            const order = new Order_1.default(input.cpf, input.issueDate, ++sequence);
             for (const orderItem of input.orderItems) {
                 const item = yield this.itemRepository.findById(orderItem.idItem);
                 order.addItem(item, orderItem.quantity);

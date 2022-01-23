@@ -12,8 +12,8 @@ export default class PlaceOrder {
     }
 
     async execute (input: PlaceOrderInput): Promise<PlaceOrderOutput> {
-
-        const order = new Order(input.cpf, input.issueDate, 1);
+        let sequence = await this.orderRepository.count();
+        const order = new Order(input.cpf, input.issueDate, ++sequence);
         for (const orderItem of input.orderItems) {
             const item = await this.itemRepository.findById(orderItem.idItem);
             order.addItem(item, orderItem.quantity);

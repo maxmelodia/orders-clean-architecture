@@ -18,11 +18,11 @@ class OrderRepositoryDatabase {
             const [orderData] = yield this.databaseConnection.query(`
            insert into ccca.order
            (
-               code, cpf, issue_date, freight, sequence, coupon
+               code, cpf, issue_date, freight, sequence, coupon, total
            )
            values
            (
-               $1,$2,$3,$4,$5,$6
+               $1,$2,$3,$4,$5,$6,$7
            )
            returning *`, [
                 order.getCode(),
@@ -30,7 +30,8 @@ class OrderRepositoryDatabase {
                 order.issueDate,
                 order.getFreight(),
                 order.sequence,
-                order.getCoupon()
+                order.getCoupon(),
+                order.getTotal()
             ]);
             for (const orderItem of order.getOrderItems()) {
                 yield this.databaseConnection.query(`
@@ -47,6 +48,12 @@ class OrderRepositoryDatabase {
                     orderData.id, orderItem.idItem, orderItem.price, orderItem.quantity
                 ]);
             }
+        });
+    }
+    count() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const [data] = yield this.databaseConnection.query("select count(*)::int from ccca.order", []);
+            return data.count;
         });
     }
 }
