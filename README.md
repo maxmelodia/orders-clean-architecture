@@ -20,7 +20,7 @@ $ npm run coverage
 # PS: em orders-clean-architecture\coverage\lcov-report\index.html
 # é possível visualizar de maneira mais amigável a cobertura dos testes.
 ```
-## 💻 Projeto (Aula 4/8)
+## 💻 Projeto (Aula 5/8)
 Trata-se de um treinamento de 8 semanas ministrado pelo [Rodrigo Branas](https://app.branas.io). 
 Estamos construindo uma aplicação "completa" utilizando TypeScript com Clean Code, Refactoring, 
 TDD, OO, Domain-Driven Design, Design Patterns, SOLID, Event Sourcing, CQRS, Clean Architecture e REST!
