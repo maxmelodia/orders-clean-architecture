@@ -1,18 +1,13 @@
 import PlaceOrder from "../../src/application/usecase/PlaceOrder";
 import PlaceOrderInput from "../../src/application/dto/PlaceOrderInput";
-import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
 import DatabaseConnectionAdapter from "../../src/infra/database/DatabaseConnectionAdapter";
-import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
-import CouponRepositoryDatabase from "../../src/infra/repository/database/CouponRepositoryDatabase";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
 
 let placeOrder: PlaceOrder;
 
 beforeEach(function() {
     const datadaseConnection = new DatabaseConnectionAdapter();
-    const itemRepository = new ItemRepositoryDatabase(datadaseConnection);
-    const orderRepository = new OrderRepositoryDatabase(datadaseConnection);
-    const couponRepository = new CouponRepositoryDatabase(datadaseConnection);
-    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder(new DatabaseRepositoryFactory(datadaseConnection));
 });
 
 test("Deve fazer um pedido", async function() {

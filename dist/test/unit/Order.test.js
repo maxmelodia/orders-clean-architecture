@@ -39,14 +39,6 @@ test("Deve criar um pedido com 3 itens com cupom de desconto expirado", function
     const total = order.getTotal();
     expect(total).toBe(6090);
 });
-test("Deve criar um pedido com 3 itens", function () {
-    const order = new Order_1.default("687.054.760-20");
-    order.addItem(new Item_1.default(1, "Peliféricos", "M2 Samsung 1TB", 1000, 100, 30, 10, 3), 1);
-    order.addItem(new Item_1.default(2, "Peliféricos", "Monitor Gamer LG 1234", 5000, 100, 50, 50, 20), 1);
-    order.addItem(new Item_1.default(3, "Peliféricos", "Teclado Multilaser", 30, 10, 10, 10, 0.9), 3);
-    const freight = order.getFreight();
-    expect(freight).toBe(260);
-});
 test("Deve criar um pedido com o código gerado", function () {
     const order = new Order_1.default("687.054.760-20", new Date("2021-03-01"));
     order.addItem(new Item_1.default(1, "Peliféricos", "M2 Samsung 1TB", 1000), 1);

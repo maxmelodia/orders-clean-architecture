@@ -16,7 +16,6 @@ class Order {
         this.code = new OrderCode_1.default(issueDate, sequence);
     }
     addItem(item, quantity) {
-        this.freight += item.getFreight() * quantity;
         this.orderItems.push(new OrderItem_1.default(item.idItem, item.price, quantity));
     }
     addCoupon(coupon) {
@@ -27,6 +26,10 @@ class Order {
     getFreight() {
         return this.freight;
     }
+    setFreight(freight) {
+        this.freight = freight;
+    }
+    ;
     getCpf() {
         return this.cpf.value;
     }

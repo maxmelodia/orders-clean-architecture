@@ -17,17 +17,12 @@ const GetOrder_1 = __importDefault(require("../../src/application/query/GetOrder
 const PlaceOrder_1 = __importDefault(require("../../src/application/usecase/PlaceOrder"));
 const OrderDAODatabase_1 = __importDefault(require("../../src/infra/dao/OrderDAODatabase"));
 const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const CouponRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/CouponRepositoryDatabase"));
-const ItemRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/ItemRepositoryDatabase"));
-const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
 let placeOrder;
 let getOrder;
 beforeEach(function () {
     const datadaseConnection = new DatabaseConnectionAdapter_1.default();
-    const itemRepository = new ItemRepositoryDatabase_1.default(datadaseConnection);
-    const orderRepository = new OrderRepositoryDatabase_1.default(datadaseConnection);
-    const couponRepository = new CouponRepositoryDatabase_1.default(datadaseConnection);
-    placeOrder = new PlaceOrder_1.default(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder_1.default(new DatabaseRepositoryFactory_1.default(datadaseConnection));
     const orderDAO = new OrderDAODatabase_1.default(datadaseConnection);
     getOrder = new GetOrder_1.default(orderDAO);
 });
@@ -49,7 +44,6 @@ test("Deve obter um pedido pelo código", function () {
         ], new Date("2021-03-01"), "VALE20");
         const placeOrderOutput = yield placeOrder.execute(input);
         const getOrderOutput = yield getOrder.execute(placeOrderOutput.code);
-        console.log(getOrderOutput);
         expect(getOrderOutput.total).toBe(4872);
     });
 });

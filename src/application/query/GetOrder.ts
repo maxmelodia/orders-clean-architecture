@@ -8,7 +8,6 @@ export default class GetOrder {
     
     async execute (code: string): Promise<GetOrderOutput> {
         const orderData = await this.orderDAO.getOrder(code);
-        console.log('orderData',orderData);
         const orderItemsData = await this.orderDAO.getOrderItems(orderData.id);
         const getOrderOutput = new GetOrderOutput(orderData.code, orderData.cpf, orderItemsData, orderData.freight, orderData.total);
         return getOrderOutput;

@@ -14,17 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const PlaceOrder_1 = __importDefault(require("../../src/application/usecase/PlaceOrder"));
 const PlaceOrderInput_1 = __importDefault(require("../../src/application/dto/PlaceOrderInput"));
-const ItemRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/ItemRepositoryDatabase"));
 const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const OrderRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/OrderRepositoryDatabase"));
-const CouponRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/CouponRepositoryDatabase"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
 let placeOrder;
 beforeEach(function () {
     const datadaseConnection = new DatabaseConnectionAdapter_1.default();
-    const itemRepository = new ItemRepositoryDatabase_1.default(datadaseConnection);
-    const orderRepository = new OrderRepositoryDatabase_1.default(datadaseConnection);
-    const couponRepository = new CouponRepositoryDatabase_1.default(datadaseConnection);
-    placeOrder = new PlaceOrder_1.default(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder_1.default(new DatabaseRepositoryFactory_1.default(datadaseConnection));
 });
 test("Deve fazer um pedido", function () {
     return __awaiter(this, void 0, void 0, function* () {

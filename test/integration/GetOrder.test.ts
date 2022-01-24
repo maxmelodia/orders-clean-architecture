@@ -3,19 +3,14 @@ import GetOrder from "../../src/application/query/GetOrder";
 import PlaceOrder from "../../src/application/usecase/PlaceOrder";
 import OrderDAODatabase from "../../src/infra/dao/OrderDAODatabase";
 import DatabaseConnectionAdapter from "../../src/infra/database/DatabaseConnectionAdapter";
-import CouponRepositoryDatabase from "../../src/infra/repository/database/CouponRepositoryDatabase";
-import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
-import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
 
 let placeOrder: PlaceOrder;
 let getOrder: GetOrder;
 
 beforeEach(function() {
     const datadaseConnection = new DatabaseConnectionAdapter();
-    const itemRepository = new ItemRepositoryDatabase(datadaseConnection);
-    const orderRepository = new OrderRepositoryDatabase(datadaseConnection);
-    const couponRepository = new CouponRepositoryDatabase(datadaseConnection);
-    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder(new DatabaseRepositoryFactory(datadaseConnection));
     const orderDAO = new OrderDAODatabase(datadaseConnection);
     getOrder = new GetOrder(orderDAO);
 });
@@ -42,6 +37,5 @@ test("Deve obter um pedido pelo código", async function (){
     
     const placeOrderOutput = await placeOrder.execute(input);
     const getOrderOutput = await getOrder.execute(placeOrderOutput.code);
-    console.log(getOrderOutput);
     expect(getOrderOutput.total).toBe(4872);
 });

@@ -14,20 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Order_1 = __importDefault(require("../../domain/entity/Order"));
 const PlaceOrderOutputAssembler_1 = __importDefault(require("../dto/PlaceOrderOutputAssembler"));
+const FreightCalculator_1 = __importDefault(require("../../domain/service/FreightCalculator"));
 class PlaceOrder {
-    constructor(itemRepository, orderRepository, couponRepository) {
-        this.itemRepository = itemRepository;
-        this.orderRepository = orderRepository;
-        this.couponRepository = couponRepository;
+    constructor(abstractRepositoryFactory) {
+        this.orderRepository = abstractRepositoryFactory.createOrderRepository();
+        this.itemRepository = abstractRepositoryFactory.createItemRepository();
+        this.couponRepository = abstractRepositoryFactory.createCouponRepository();
     }
     execute(input) {
         return __awaiter(this, void 0, void 0, function* () {
             let sequence = yield this.orderRepository.count();
             const order = new Order_1.default(input.cpf, input.issueDate, ++sequence);
+            let freight = 0;
             for (const orderItem of input.orderItems) {
                 const item = yield this.itemRepository.findById(orderItem.idItem);
+                freight += FreightCalculator_1.default.calculate(item) * orderItem.quantity;
                 order.addItem(item, orderItem.quantity);
             }
+            order.setFreight(freight);
             if (input.coupon) {
                 const coupon = yield this.couponRepository.findByCode(input.coupon);
                 order.addCoupon(coupon);

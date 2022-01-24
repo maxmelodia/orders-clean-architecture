@@ -15,12 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SimulateFreightInput_1 = __importDefault(require("../../src/application/dto/SimulateFreightInput"));
 const SimulateFreigth_1 = __importDefault(require("../../src/application/usecase/SimulateFreigth"));
 const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const ItemRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/ItemRepositoryDatabase"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
 test("Deve simular o frete dos produtos", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const databaseConnection = new DatabaseConnectionAdapter_1.default();
-        const itemRepository = new ItemRepositoryDatabase_1.default(databaseConnection);
-        const simulateFreight = new SimulateFreigth_1.default(itemRepository);
+        const simulateFreight = new SimulateFreigth_1.default(new DatabaseRepositoryFactory_1.default(databaseConnection));
         const input = new SimulateFreightInput_1.default([
             {
                 idItem: 1,

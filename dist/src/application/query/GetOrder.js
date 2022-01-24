@@ -20,7 +20,6 @@ class GetOrder {
     execute(code) {
         return __awaiter(this, void 0, void 0, function* () {
             const orderData = yield this.orderDAO.getOrder(code);
-            console.log('orderData', orderData);
             const orderItemsData = yield this.orderDAO.getOrderItems(orderData.id);
             const getOrderOutput = new GetOrderOutput_1.default(orderData.code, orderData.cpf, orderItemsData, orderData.freight, orderData.total);
             return getOrderOutput;

@@ -1,10 +1,12 @@
+import AbstractRepositoryFactory from "../../domain/factory/AbstractRepositoryFactory";
 import ItemRepository from "../../domain/repository/ItemRepository";
 import SimulateFreightInput from "../dto/SimulateFreightInput";
 
 export default class SimulateFreight {
+    itemRepository: any;
 
-    constructor (readonly itemRepository: ItemRepository) {
-
+    constructor (abstractRepositoryFactory: AbstractRepositoryFactory) {
+        this.itemRepository = abstractRepositoryFactory.createItemRepository();
     }
 
     async execute (input: SimulateFreightInput): Promise<number> {

@@ -3,19 +3,14 @@ import GetOrders from "../../src/application/query/GetOrders";
 import PlaceOrder from "../../src/application/usecase/PlaceOrder";
 import OrderDAODatabase from "../../src/infra/dao/OrderDAODatabase";
 import DatabaseConnectionAdapter from "../../src/infra/database/DatabaseConnectionAdapter";
-import CouponRepositoryDatabase from "../../src/infra/repository/database/CouponRepositoryDatabase";
-import ItemRepositoryDatabase from "../../src/infra/repository/database/ItemRepositoryDatabase";
-import OrderRepositoryDatabase from "../../src/infra/repository/database/OrderRepositoryDatabase";
+import DatabaseRepositoryFactory from "../../src/infra/factory/DatabaseRepositoryFactory";
 
 let placeOrder: PlaceOrder;
 let getOrders: GetOrders;
 
 beforeEach(function() {
     const datadaseConnection = new DatabaseConnectionAdapter();
-    const itemRepository = new ItemRepositoryDatabase(datadaseConnection);
-    const orderRepository = new OrderRepositoryDatabase(datadaseConnection);
-    const couponRepository = new CouponRepositoryDatabase(datadaseConnection);
-    placeOrder = new PlaceOrder(itemRepository, orderRepository, couponRepository);
+    placeOrder = new PlaceOrder(new DatabaseRepositoryFactory(datadaseConnection));
     const orderDAO = new OrderDAODatabase(datadaseConnection);
     getOrders = new GetOrders(orderDAO);
 });
@@ -42,5 +37,4 @@ test("Deve retornar todos os pedidos", async function (){
     
     await placeOrder.execute(input);
     const getOrdersOutput = await getOrders.execute();
-    console.log(getOrdersOutput);
 });
