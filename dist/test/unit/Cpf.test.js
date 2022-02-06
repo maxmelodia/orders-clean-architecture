@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Cpf_1 = __importDefault(require("../../src/domain/entity/Cpf"));
+const Cpf_1 = __importDefault(require("../../src/checkout/domain/entity/Cpf"));
 test("Deve validar um cpf", function () {
     const cpf = new Cpf_1.default("687.054.760-20");
     expect(cpf).toBeDefined();

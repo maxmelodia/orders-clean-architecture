@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ValidateCoupon_1 = __importDefault(require("../../src/application/usecase/ValidateCoupon"));
-const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const CouponRepositoryDatabase_1 = __importDefault(require("../../src/infra/repository/database/CouponRepositoryDatabase"));
+const ValidateCoupon_1 = __importDefault(require("../../src/checkout/application/usecase/ValidateCoupon"));
+const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/checkout/infra/database/DatabaseConnectionAdapter"));
+const CouponRepositoryDatabase_1 = __importDefault(require("../../src/checkout/infra/repository/database/CouponRepositoryDatabase"));
 test("Deve validar o cupom de desconto", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const databaseConnection = new DatabaseConnectionAdapter_1.default();

@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Coupon_1 = __importDefault(require("../../src/domain/entity/Coupon"));
-const Item_1 = __importDefault(require("../../src/domain/entity/Item"));
-const Order_1 = __importDefault(require("../../src/domain/entity/Order"));
+const Coupon_1 = __importDefault(require("../../src/checkout/domain/entity/Coupon"));
+const Item_1 = __importDefault(require("../../src/checkout/domain/entity/Item"));
+const Order_1 = __importDefault(require("../../src/checkout/domain/entity/Order"));
 test("Não deve criar um pedido com CPF inválido", function () {
     expect(() => new Order_1.default("111.111.111.-11")).toThrowError(new Error("Invalid cpf"));
 });

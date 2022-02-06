@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SimulateFreightInput_1 = __importDefault(require("../../src/application/dto/SimulateFreightInput"));
-const SimulateFreigth_1 = __importDefault(require("../../src/application/usecase/SimulateFreigth"));
-const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
+const SimulateFreightInput_1 = __importDefault(require("../../src/checkout/application/dto/SimulateFreightInput"));
+const SimulateFreigth_1 = __importDefault(require("../../src/checkout/application/usecase/SimulateFreigth"));
+const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/checkout/infra/database/DatabaseConnectionAdapter"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/checkout/infra/factory/DatabaseRepositoryFactory"));
 test("Deve simular o frete dos produtos", function () {
     return __awaiter(this, void 0, void 0, function* () {
         const databaseConnection = new DatabaseConnectionAdapter_1.default();

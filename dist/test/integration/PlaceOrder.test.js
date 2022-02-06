@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PlaceOrder_1 = __importDefault(require("../../src/application/usecase/PlaceOrder"));
-const PlaceOrderInput_1 = __importDefault(require("../../src/application/dto/PlaceOrderInput"));
-const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/infra/database/DatabaseConnectionAdapter"));
-const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/infra/factory/DatabaseRepositoryFactory"));
+const PlaceOrder_1 = __importDefault(require("../../src/checkout/application/usecase/PlaceOrder"));
+const PlaceOrderInput_1 = __importDefault(require("../../src/checkout/application/dto/PlaceOrderInput"));
+const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/checkout/infra/database/DatabaseConnectionAdapter"));
+const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/checkout/infra/factory/DatabaseRepositoryFactory"));
 let placeOrder;
 beforeEach(function () {
     const datadaseConnection = new DatabaseConnectionAdapter_1.default();
