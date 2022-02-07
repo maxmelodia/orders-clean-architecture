@@ -32,6 +32,7 @@ create table ccca.order (
 	cpf text,
 	issue_date timestamp,
 	freight numeric,
+	status text, 
 	sequence integer,
 	primary key (id)
 );
@@ -45,3 +46,13 @@ create table ccca.order_item (
 );
 
 create table ccca.order_view ( code text primary key, data jsonb);
+
+create table ccca.stock_entry (
+	id serial,
+	id_item integer,
+	operation text,
+	quantity integer,
+	date timestamp,
+	sequence integer,
+	primary key (id)
+);

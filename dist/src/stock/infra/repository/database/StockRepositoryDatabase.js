@@ -9,30 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+class StockRepositoryDatabase {
+    constructor(databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
-    get(code) {
+    save(stockEntry) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = this.orders.find(order => order.code.value === code);
-            if (!order)
-                throw new Error("Order not found");
-            return order;
-        });
-    }
-    update(order) {
-        throw new Error("Method not implemented.");
-    }
-    save(order) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
-        });
-    }
-    count() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.orders.length;
+            this.databaseConnection.query("insert into ccca.stock_entry (id_item, operation, quantity, date) values ($1, $2, $3, $4)", [stockEntry.idItem, stockEntry.operation, stockEntry.quantity, new Date()]);
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = StockRepositoryDatabase;

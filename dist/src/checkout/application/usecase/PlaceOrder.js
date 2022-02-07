@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Order_1 = __importDefault(require("../../domain/entity/Order"));
 const PlaceOrderOutputAssembler_1 = __importDefault(require("../dto/PlaceOrderOutputAssembler"));
 const FreightCalculator_1 = __importDefault(require("../../domain/service/FreightCalculator"));
+const OrderPlaced_1 = __importDefault(require("../../../shared/domain/event/OrderPlaced"));
 class PlaceOrder {
-    constructor(abstractRepositoryFactory) {
+    constructor(abstractRepositoryFactory, eventBus) {
+        this.eventBus = eventBus;
         this.orderRepository = abstractRepositoryFactory.createOrderRepository();
         this.itemRepository = abstractRepositoryFactory.createItemRepository();
         this.couponRepository = abstractRepositoryFactory.createCouponRepository();
@@ -37,6 +39,8 @@ class PlaceOrder {
                 order.addCoupon(coupon);
             }
             this.orderRepository.save(order);
+            const items = order.getOrderItems().map(orderItem => ({ idItem: orderItem.idItem, quantity: orderItem.quantity }));
+            yield this.eventBus.publish(new OrderPlaced_1.default(order.code.value, items));
             return PlaceOrderOutputAssembler_1.default.assembly(order);
         });
     }

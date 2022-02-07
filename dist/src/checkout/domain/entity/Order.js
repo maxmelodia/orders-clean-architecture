@@ -14,6 +14,7 @@ class Order {
         this.orderItems = [];
         this.freight = 0;
         this.code = new OrderCode_1.default(issueDate, sequence);
+        this.status = "pending";
     }
     addItem(item, quantity) {
         this.orderItems.push(new OrderItem_1.default(item.idItem, item.price, quantity));
@@ -42,6 +43,9 @@ class Order {
     }
     getOrderItems() {
         return this.orderItems;
+    }
+    cancel() {
+        this.status = "cancelled";
     }
     getTotal() {
         let total = 0;

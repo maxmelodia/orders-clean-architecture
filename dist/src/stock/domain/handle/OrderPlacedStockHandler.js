@@ -8,31 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+const StockEntry_1 = __importDefault(require("../entity/StockEntry"));
+class OrderPlacedStockHandler {
+    constructor(stockRepository) {
+        this.stockRepository = stockRepository;
     }
-    get(code) {
+    notify(orderPlaced) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = this.orders.find(order => order.code.value === code);
-            if (!order)
-                throw new Error("Order not found");
-            return order;
-        });
-    }
-    update(order) {
-        throw new Error("Method not implemented.");
-    }
-    save(order) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
-        });
-    }
-    count() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.orders.length;
+            for (const orderItem of orderPlaced.items) {
+                const stockEntry = new StockEntry_1.default(orderItem.idItem, "out", orderItem.quantity);
+                yield this.stockRepository.save(stockEntry);
+            }
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = OrderPlacedStockHandler;

@@ -8,7 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Coupon_1 = __importDefault(require("../../../domain/entity/Coupon"));
+const Item_1 = __importDefault(require("../../../domain/entity/Item"));
+const Order_1 = __importDefault(require("../../../domain/entity/Order"));
 class OrderRepositoryDatabase {
     constructor(databaseConnection) {
         this.databaseConnection = databaseConnection;
@@ -48,6 +54,54 @@ class OrderRepositoryDatabase {
                     orderData.id, orderItem.idItem, orderItem.price, orderItem.quantity
                 ]);
             }
+        });
+    }
+    get(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const [orderData] = yield this.databaseConnection.query("select * from ccca.order where code = $1", [code]);
+            const order = new Order_1.default(orderData.cpf, orderData.issue_date, orderData.sequence);
+            const orderItemsData = yield this.databaseConnection.query("select * from ccca.order_item where id_order = $1", [orderData.id]);
+            console.log('orderItemsData', orderItemsData);
+            for (const orderItemData of orderItemsData) {
+                const [itemData] = yield this.databaseConnection.query("select * from ccca.item where id = $1", [orderItemData.id_item]);
+                const item = new Item_1.default(itemData.id, itemData.category, itemData.description, itemData.price, itemData.width, itemData.height, itemData.length, itemData.weight);
+                order.addItem(item, orderItemData.quantity);
+            }
+            order.setFreight(orderData.freight);
+            const [couponData] = yield this.databaseConnection.query("select * from ccca.coupon where code = $1", [orderData.coupon]);
+            if (couponData) {
+                const coupon = new Coupon_1.default(couponData.code, couponData.percentage, couponData.expire_date);
+                order.addCoupon(coupon);
+            }
+            return order;
+        });
+    }
+    /*async get(code: string): Promise<Order> {
+        console.log('code',code);
+        const [orderData] = await this.databaseConnection.query("select * from ccca.order where code = $1", [code]);
+        const order = new Order(orderData.cpf, orderData.issue_date, orderData.sequence);
+        console.log('orderData.id',orderData.id);
+        const orderItemsData = await this.databaseConnection.query("select * from ccca.order_item where id_order = $1", [orderData.id]);
+        
+        console.log('orderItemsData',orderItemsData);
+        for (const orderItemData of orderItemsData) {
+            const [itemData] = await this.databaseConnection.query("select * from ccca.item where id = $1", [orderItemData.id_item]);
+            const item = new Item(itemData.id, itemData.category, itemData.description, itemData.price, itemData.width, itemData.height, itemData.length, itemData.weight);
+            order.addItem(item, orderItemData.quantity);
+        }
+        order.setFreight(orderData.freight);
+        const [couponData] = await this.databaseConnection.query("select * from ccca.coupon where code = $1", [orderData.coupon]);
+
+        if (couponData) {
+            const coupon = new Coupon(couponData.code, couponData.percentage, couponData.expire_date);
+            order.addCoupon(coupon);
+        }
+        console.log('order',order);
+        return order;
+    }*/
+    update(order) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.databaseConnection.query("update ccca.order set status = $1 where code = $2", [order.status, order.code.value]);
         });
     }
     count() {

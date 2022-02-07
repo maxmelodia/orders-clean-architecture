@@ -19,13 +19,18 @@ const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/checkout/
 const EventBus_1 = __importDefault(require("../../src/shared/infra/event/EventBus"));
 const OrderPlacedStockHandler_1 = __importDefault(require("../../src/stock/domain/handle/OrderPlacedStockHandler"));
 const StockRepositoryDatabase_1 = __importDefault(require("../../src/stock/infra/repository/database/StockRepositoryDatabase"));
+const CancelOrder_1 = __importDefault(require("../../src/checkout/application/usecase/CancelOrder"));
+const OrderCancelledStockHandler_1 = __importDefault(require("../../src/stock/domain/handle/OrderCancelledStockHandler"));
 let placeOrder;
+let cancelOrder;
 beforeEach(function () {
     const databaseConnection = new DatabaseConnectionAdapter_1.default();
     const databaseRepositoryFactory = new DatabaseRepositoryFactory_1.default(databaseConnection);
     const eventBus = new EventBus_1.default();
     eventBus.subscribe("OrderPlaced", new OrderPlacedStockHandler_1.default(new StockRepositoryDatabase_1.default(databaseConnection)));
+    eventBus.subscribe("OrderCancelled", new OrderCancelledStockHandler_1.default(new StockRepositoryDatabase_1.default(databaseConnection)));
     placeOrder = new PlaceOrder_1.default(databaseRepositoryFactory, eventBus);
+    cancelOrder = new CancelOrder_1.default(databaseRepositoryFactory, eventBus);
 });
 test("Deve fazer um pedido", function () {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,8 +47,8 @@ test("Deve fazer um pedido", function () {
                 idItem: 3,
                 quantity: 3
             }
-        ], new Date("2021-03-01"), "VALE20");
+        ], new Date("2022-02-06"), "VALE20");
         const output = yield placeOrder.execute(input);
-        expect(output.total).toBe(4872);
+        yield cancelOrder.execute(output.code);
     });
 });

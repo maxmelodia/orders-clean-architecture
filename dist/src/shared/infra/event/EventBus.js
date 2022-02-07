@@ -9,30 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
+class EventBus {
     constructor() {
-        this.orders = [];
+        this.consumers = [];
     }
-    get(code) {
+    subscribe(eventName, handler) {
+        this.consumers.push({ eventName, handler });
+    }
+    publish(event) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = this.orders.find(order => order.code.value === code);
-            if (!order)
-                throw new Error("Order not found");
-            return order;
-        });
-    }
-    update(order) {
-        throw new Error("Method not implemented.");
-    }
-    save(order) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
-        });
-    }
-    count() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.orders.length;
+            for (const consumer of this.consumers) {
+                if (consumer.eventName === event.name) {
+                    yield consumer.handler.notify(event);
+                }
+            }
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = EventBus;

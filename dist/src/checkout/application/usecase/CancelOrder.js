@@ -8,31 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class OrderRepositoryMemory {
-    constructor() {
-        this.orders = [];
+const OrderCancelled_1 = __importDefault(require("../../../shared/domain/event/OrderCancelled"));
+class CancelOrder {
+    constructor(abstractRepositoryFactory, eventBus) {
+        this.eventBus = eventBus;
+        this.orderRepository = abstractRepositoryFactory.createOrderRepository();
     }
-    get(code) {
+    execute(code) {
         return __awaiter(this, void 0, void 0, function* () {
-            const order = this.orders.find(order => order.code.value === code);
-            if (!order)
-                throw new Error("Order not found");
-            return order;
-        });
-    }
-    update(order) {
-        throw new Error("Method not implemented.");
-    }
-    save(order) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.orders.push(order);
-        });
-    }
-    count() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.orders.length;
+            const order = yield this.orderRepository.get(code);
+            order.cancel();
+            yield this.orderRepository.update(order);
+            const items = order.getOrderItems().map(orderItem => ({ idItem: orderItem.idItem, quantity: orderItem.quantity }));
+            this.eventBus.publish(new OrderCancelled_1.default(code, items));
         });
     }
 }
-exports.default = OrderRepositoryMemory;
+exports.default = CancelOrder;

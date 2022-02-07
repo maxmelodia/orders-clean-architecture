@@ -18,11 +18,14 @@ const PlaceOrder_1 = __importDefault(require("../../src/checkout/application/use
 const OrderDAODatabase_1 = __importDefault(require("../../src/checkout/infra/dao/OrderDAODatabase"));
 const DatabaseConnectionAdapter_1 = __importDefault(require("../../src/checkout/infra/database/DatabaseConnectionAdapter"));
 const DatabaseRepositoryFactory_1 = __importDefault(require("../../src/checkout/infra/factory/DatabaseRepositoryFactory"));
+const EventBus_1 = __importDefault(require("../../src/shared/infra/event/EventBus"));
 let placeOrder;
 let getOrder;
 beforeEach(function () {
     const datadaseConnection = new DatabaseConnectionAdapter_1.default();
-    placeOrder = new PlaceOrder_1.default(new DatabaseRepositoryFactory_1.default(datadaseConnection));
+    const databaseRepositoryFactory = new DatabaseRepositoryFactory_1.default(datadaseConnection);
+    const eventBus = new EventBus_1.default();
+    placeOrder = new PlaceOrder_1.default(databaseRepositoryFactory, eventBus);
     const orderDAO = new OrderDAODatabase_1.default(datadaseConnection);
     getOrder = new GetOrder_1.default(orderDAO);
 });
