@@ -19,6 +19,12 @@ $ npm run test
 $ npm run coverage
 # PS: em orders-clean-architecture\coverage\lcov-report\index.html
 # é possível visualizar de maneira mais amigável a cobertura dos testes.
+
+# Start Api
+npm run main
+
+# Start Client
+npm run serve
 ```
 ## 💻 Projeto (Aula 8/8)
 Trata-se de um treinamento de 8 semanas ministrado pelo [Rodrigo Branas](https://app.branas.io). 
