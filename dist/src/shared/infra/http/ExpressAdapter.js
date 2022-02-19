@@ -16,6 +16,13 @@ const express_1 = __importDefault(require("express"));
 class ExpressAdapter {
     constructor() {
         this.app = (0, express_1.default)();
+        this.app.all("*", function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+            res.header("Access-Control-Allow-Headers", "Content-Type, x-access-token");
+            next();
+        });
+        this.app.use(express_1.default.json());
     }
     on(url, method, fn) {
         this.app[method](url, function (req, res) {

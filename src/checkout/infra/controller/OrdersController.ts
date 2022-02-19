@@ -17,7 +17,7 @@ export default class OrdersController {
 
     async placeOrder (params: any, body: any) {
         const placeOrder = new PlaceOrder(new DatabaseRepositoryFactory(this.databaseConnection), this.eventBus);
-        await placeOrder.execute(body);
-
+        const order = await placeOrder.execute(body);
+        return order;
     }
 }
